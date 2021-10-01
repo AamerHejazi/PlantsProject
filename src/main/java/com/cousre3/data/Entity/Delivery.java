@@ -1,5 +1,6 @@
 package com.cousre3.data.Entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.Nationalized;
 import org.hibernate.annotations.Type;
 
@@ -11,7 +12,7 @@ import java.util.List;
 @Entity
 public class Delivery {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Nationalized
@@ -26,7 +27,19 @@ public class Delivery {
     //  but often a good idea for collection attributes
     //  added CascadeType.REMOVE to automatically clear any associated plants when removed
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "delivery", cascade = CascadeType.ALL)
+
+    @JsonManagedReference // added to solve recursion problem with plant class
     private List<Plant> plants;
+
+    public Delivery(String name, String address, LocalDateTime deliveryTime) {
+        this.name = name;
+        this.address = address;
+        this.deliveryTime = deliveryTime;
+    }
+
+    public Delivery() {
+
+    }
 
     public Long getId() {
         return id;
