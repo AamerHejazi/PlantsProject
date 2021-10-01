@@ -9,6 +9,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 @RestController
 @RequestMapping("/plant")
 public class PlantController {
@@ -24,6 +27,17 @@ public class PlantController {
     @PostMapping
     public void consumePlant(@RequestBody PlantDTO plantDTO){
         
+    }
+
+    @GetMapping("/delivered/{id}")
+    public Boolean delivered(@PathVariable Long id) {
+        return plantService.delivered(id);
+    }
+
+    @GetMapping("/under-price/{price}")
+    @JsonView(Views.Public.class)
+    public List<Plant> plantsCheaperThan(@PathVariable BigDecimal price) {
+        return plantService.findPlantsBelowPrice(price);
     }
 
     private static PlantDTO convertPlantToPlantDTO(Plant plant){
